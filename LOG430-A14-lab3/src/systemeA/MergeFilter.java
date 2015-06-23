@@ -36,6 +36,10 @@ public class MergeFilter extends Thread {
 	// Create local pipes to that will connect to upstream filters
 	PipedReader inputPipe1 = new PipedReader();
 	PipedReader inputPipe2 = new PipedReader();
+	
+	//Create local strings
+	String lineOfText1 = "";
+	String lineOfText2 = "";
 
 	// Create local pipes to that will connect to downstream filter
 	PipedWriter outputPipe = new PipedWriter();
@@ -84,8 +88,8 @@ public class MergeFilter extends Thread {
 			int integerCharacter2;
 
 			// lines of text from input pipes #1 and #2
-			String lineOfText1 = "";
-			String lineOfText2 = "";
+			lineOfText1 = "";
+			lineOfText2 = "";
 
 			// Indicate whether lines of text are ready to be output
 			// to downstream filters
@@ -158,8 +162,14 @@ public class MergeFilter extends Thread {
 					} // if ( IntegerCharacter2 == -1 )
 
 				} // if (!Done2)
-
+				
+				if(write1 && write2)
+				{
+					alphabeticalFilter();
+				
+				
 				if (write1) {
+					
 					write1 = false;
 
 					try {
@@ -177,6 +187,7 @@ public class MergeFilter extends Thread {
 				} // if ( Write1 )
 
 				if (write2) {
+					
 					write2 = false;
 
 					try {
@@ -192,6 +203,7 @@ public class MergeFilter extends Thread {
 					lineOfText2 = "";
 
 				} // if (Write2)
+				}
 
 			} // while ( !Done1 || !Done2 )
 
@@ -209,5 +221,20 @@ public class MergeFilter extends Thread {
 		} // try/catch
 
 	} // run
+	
+	private void alphabeticalFilter()
+	{
+		if(!lineOfText1.isEmpty() || !lineOfText2.isEmpty())
+		{
+			String[] order1 = lineOfText1.split(" ");
+			String[] order2 = lineOfText2.split(" ");
+			if(order1[5].compareToIgnoreCase(order2[5]) > 0)
+			{
+				String temp = this.lineOfText1;
+				this.lineOfText1 = this.lineOfText2;
+				this.lineOfText2 = temp;
+			}
+		}
+	}
 
 } // class

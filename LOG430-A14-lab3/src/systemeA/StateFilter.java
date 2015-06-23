@@ -5,26 +5,26 @@ import java.io.PipedWriter;
 
 /**
  * This class is intended to be a filter that will key on a particular state
- * provided at instantiation.  Note that the stream has to be buffered so that
- * it can be checked to see if the specified severity appears on the stream.
- * If this string appears in the input stream, teh whole line is passed to the
+ * provided at instantiation. Note that the stream has to be buffered so that it
+ * can be checked to see if the specified severity appears on the stream. If
+ * this string appears in the input stream, teh whole line is passed to the
  * output stream.
  * 
  * <pre>
  * Pseudo Code:
- *
+ * 
  * connect to input pipe
  * connect to output pipe
- *
+ * 
  * while not end of line
- *
- *		read input pipe
- *
- *		if specified severity appears on line of text
- *			write line of text to output pipe
- *			flush pipe
- *		end if
- *
+ * 
+ * 	read input pipe
+ * 
+ * 	if specified severity appears on line of text
+ * 		write line of text to output pipe
+ * 		flush pipe
+ * 	end if
+ * 
  * end while
  * close pipes
  * </pre>
@@ -33,7 +33,8 @@ import java.io.PipedWriter;
  * @version 1.0
  */
 
-public class StateFilter extends Thread {
+public class StateFilter extends Thread
+{
 
 	// Declarations
 
@@ -41,26 +42,35 @@ public class StateFilter extends Thread {
 
 	String severity;
 	PipedReader inputPipe = new PipedReader();
-	PipedWriter outputPipe = new PipedWriter();
+	PipedWriter outputPipe1 = new PipedWriter();
+	PipedWriter outputPipe2 = new PipedWriter();
 
 	public StateFilter(String severity, PipedWriter inputPipe,
-			PipedWriter outputPipe) {
+			PipedWriter outputPipe1, PipedWriter outputPipe2)
+	{
 
 		this.severity = severity;
 
-		try {
+		try
+		{
 
 			// Connect inputPipe
 			this.inputPipe.connect(inputPipe);
 			System.out.println("StateFilter " + severity
 					+ ":: connected to upstream filter.");
 
-			// Connect outputPipe
-			this.outputPipe = outputPipe;
+			// Connect outputPipe1
+			this.outputPipe1 = outputPipe1;
 			System.out.println("StateFilter " + severity
-					+ ":: connected to downstream filter.");
+					+ ":: connected to downstream filter1.");
 
-		} catch (Exception Error) {
+			// Connect outputPipe2
+			this.outputPipe2 = outputPipe2;
+			System.out.println("StateFilter " + severity
+					+ ":: connected to downstream filter2.");
+
+		} catch (Exception Error)
+		{
 
 			System.out.println("StateFilter " + severity
 					+ ":: Error connecting to other filters.");
@@ -70,7 +80,8 @@ public class StateFilter extends Thread {
 	} // Constructor
 
 	// This is the method that is called when the thread is started
-	public void run() {
+	public void run()
+	{
 
 		// Declarations
 
@@ -80,41 +91,59 @@ public class StateFilter extends Thread {
 		// string is required to look for the keyword
 		int integerCharacter; // the integer value read from the pipe
 
-		try {
+		try
+		{
 
 			done = false;
 
-			while (!done) {
+			while (!done)
+			{
 
 				integerCharacter = inputPipe.read();
 				characterValue[0] = (char) integerCharacter;
 
-				if (integerCharacter == -1) { // pipe is closed
+				if (integerCharacter == -1)
+				{ // pipe is closed
 
 					done = true;
 
-				} else {
+				} else
+				{
 
-					if (integerCharacter == '\n') { // end of line
+					if (integerCharacter == '\n')
+					{ // end of line
 
 						System.out.println("StateFilter " + severity
 								+ ":: received: " + lineOfText + ".");
 
-						if (lineOfText.indexOf(severity) != -1) {
+						if (lineOfText.indexOf(severity) != -1)
+						{
 
-							System.out.println("StateFilter "
-									+ severity + ":: sending: "
-									+ lineOfText + " to output pipe.");
+							System.out.println("StateFilter " + severity
+									+ ":: sending: " + lineOfText
+									+ " to output pipe.");
 							lineOfText += new String(characterValue);
-							outputPipe
-									.write(lineOfText, 0, lineOfText.length());
-							outputPipe.flush();
+							outputPipe1.write(lineOfText, 0,
+									lineOfText.length());
+							outputPipe1.flush();
 
-						} // if
+						} 
+						else
+						{
+							System.out.println("StateFilter " + severity
+									+ ":: sending: " + lineOfText
+									+ " to output pipe.");
+							lineOfText += new String(characterValue);
+							outputPipe2.write(lineOfText, 0,
+									lineOfText.length());
+							outputPipe2.flush();
+						}
 
 						lineOfText = "";
 
-					} else {
+					} 
+					else 
+					{
 
 						lineOfText += new String(characterValue);
 
@@ -124,24 +153,30 @@ public class StateFilter extends Thread {
 
 			} // while
 
-		} catch (Exception error) {
+		} catch (Exception error)
+		{
 
-			System.out.println("StateFilter::" + severity
-					+ " Interrupted.");
+			System.out.println("StateFilter::" + severity + " Interrupted.");
 
 		} // try/catch
 
-		try {
+		try
+		{
 
 			inputPipe.close();
 			System.out.println("StateFilter " + severity
 					+ ":: input pipe closed.");
 
-			outputPipe.close();
+			outputPipe1.close();
 			System.out.println("StateFilter " + severity
 					+ ":: output pipe closed.");
+			
+			outputPipe2.close();
+			System.out.println("StateFilter " + severity
+					+ ":: output2 pipe closed.");
 
-		} catch (Exception error) {
+		} catch (Exception error)
+		{
 
 			System.out.println("StateFilter " + severity
 					+ ":: Error closing pipes.");

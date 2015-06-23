@@ -59,9 +59,10 @@ public class SystemInitialize
 			 * System.out.println("\n\nNombre incorrect de parametres d'entree. Utilisation:");
 			 * System.out.println("\njava SystemInitialize <fichier d'entree> <fichier de sortie>");
 			 */
-			argv = new String[2];
+			argv = new String[3];
 			argv[0] = "datain.txt";
 			argv[1] = "resultats.txt";
+			argv[2] = "filteredOut.txt";
 		}
 
 		// These are the declarations for the pipes.
@@ -71,14 +72,20 @@ public class SystemInitialize
 		PipedWriter pipe04 = new PipedWriter();
 		PipedWriter pipe05 = new PipedWriter();
 		PipedWriter pipe06 = new PipedWriter();
+		
+		PipedWriter pipe07 = new PipedWriter();
+		PipedWriter pipe08 = new PipedWriter();
+		PipedWriter pipe09 = new PipedWriter();
 
 		// Instantiate Filter Threads
 		Thread fileReaderFilter = new FileReaderFilter(argv[0], pipe01);
 		Thread statusFilter = new StatusFilter(pipe01, pipe02, pipe03);
-		Thread stateFilter1 = new StateFilter("RIS", pipe02, pipe04);
-		Thread stateFilter2 = new StateFilter("DIF", pipe03, pipe05);
+		Thread stateFilter1 = new StateFilter("RIS", pipe02, pipe04, pipe07);
+		Thread stateFilter2 = new StateFilter("DIF", pipe03, pipe05, pipe08);
 		Thread mergeFilter = new MergeFilter(pipe04, pipe05, pipe06);
+		Thread mergeFilter2 = new MergeFilter(pipe07, pipe08, pipe09);
 		Thread fileWriterFilter = new FileWriterFilter(argv[1], pipe06);
+		Thread fileWriterFilter2 = new FileWriterFilter(argv[2], pipe09);
 
 		// Start the threads
 		fileReaderFilter.start();
@@ -86,7 +93,9 @@ public class SystemInitialize
 		stateFilter1.start();
 		stateFilter2.start();
 		mergeFilter.start();
+		mergeFilter2.start();
 		fileWriterFilter.start();
+		fileWriterFilter2.start();
 
 	} // main
 

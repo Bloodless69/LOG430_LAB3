@@ -152,7 +152,7 @@ public class FileWriterFilter extends Thread {
 					// Add LineOfText1 to temporary string array,
 					// increment arrayindex and reset Write1 to false.
 					write1 = false;
-					tmpArray[count] = lineOfText1;
+					tmpArray[count] = formatLineOfText(lineOfText1);//MODIF 1
 					++count;
 					lineOfText1 = "";
 				} // if
@@ -190,5 +190,11 @@ public class FileWriterFilter extends Thread {
 		} // try/catch
 
 	} // run
+	
+	private String formatLineOfText(String line)
+	{
+		String[] stringTable = line.split(" ");
+		return stringTable[1]+" "+stringTable[5]+" "+stringTable[4] + " "+stringTable[0];
+	}
 
 } // class
