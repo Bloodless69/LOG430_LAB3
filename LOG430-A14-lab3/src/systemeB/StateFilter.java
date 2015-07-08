@@ -112,7 +112,7 @@ public class StateFilter extends Thread
 						
 						if(severity == "1")
 						{
-							if(under50(lineOfText))
+							if(underValue(lineOfText,50))
 							{
 								System.out.println("StateFilter " + severity
 										+ ":: sending: " + lineOfText
@@ -125,8 +125,34 @@ public class StateFilter extends Thread
 						}
 						if(severity == "2")
 						{
-							
+							if(lineOfText.indexOf("RIS") != -1)
+							{
+								if(isValue(lineOfText,25))
+								{
+									System.out.println("StateFilter " + severity
+											+ ":: sending: " + lineOfText
+											+ " to output pipe.");
+									lineOfText += new String(characterValue);
+									outputPipe
+											.write(lineOfText, 0, lineOfText.length());
+									outputPipe.flush();
+								}
+							}
+							else
+							{
+								if(overValue(lineOfText,75))
+								{
+									System.out.println("StateFilter " + severity
+											+ ":: sending: " + lineOfText
+											+ " to output pipe.");
+									lineOfText += new String(characterValue);
+									outputPipe
+											.write(lineOfText, 0, lineOfText.length());
+									outputPipe.flush();
+								}
+							}
 						}
+
 
 						lineOfText = "";
 
@@ -169,17 +195,42 @@ public class StateFilter extends Thread
 
 	} // run
 	
-	private boolean under50(String lineOfText)
+	private boolean underValue(String lineOfText, int val)
 	{
 		if(!lineOfText.isEmpty())
 		{
 			String[] order = lineOfText.split(" ");
-			if(Integer.parseInt(order[4]) < 50)
+			if(Integer.parseInt(order[4]) < val)
 			{
 				return true;
 			}
 		}
-		
+		return false;
+	}
+	
+	private boolean isValue(String lineOfText, int val)
+	{
+		if(!lineOfText.isEmpty())
+		{
+			String[] order = lineOfText.split(" ");
+			if(Integer.parseInt(order[4]) == val)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean overValue(String lineOfText, int val)
+	{
+		if(!lineOfText.isEmpty())
+		{
+			String[] order = lineOfText.split(" ");
+			if(Integer.parseInt(order[4]) > val)
+			{
+				return true;
+			}
+		}
 		return false;
 	}
 
