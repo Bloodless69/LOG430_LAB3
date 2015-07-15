@@ -77,8 +77,8 @@ public class SystemInitialize
 		Thread statusFilter = new StatusFilter(pipe01, pipe02, pipe03);
 		Thread stateFilter1 = new StateFilter("1", pipe02, pipe04);
 		Thread stateFilter2 = new StateFilter("2", pipe03, pipe05);
-		Thread fileWriterFilter1 = new FileWriterFilter(argv[1]+"_RIS", pipe04);
-		Thread fileWriterFilter2 = new FileWriterFilter(argv[1]+"_DIF", pipe05);
+		Thread fileWriterFilter1 = new FileWriterFilter(argv[1]+"_REG", pipe04);
+		Thread fileWriterFilter2 = new FileWriterFilter(argv[1]+"_CRI", pipe05);
 
 		// Start the threads
 		fileReaderFilter.start();
