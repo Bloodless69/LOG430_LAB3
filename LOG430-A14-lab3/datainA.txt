@@ -1,0 +1,6 @@
+0001 REG SYS001 01.01 90 RIS Nouvelle version de SIGNETS
+0002 REG SYS001 01.05 60 PRO Systeme de gestion des billets
+0003 REG SYS003 02.04 00 DIF CRM serv. des relations avec l'industrie
+0004 CRI SYS003 02.04 00 RIS GIJOE
+0005 CRI SYS003 02.04 00 PRO ROSEBUD
+0006 CRI SYS003 02.04 00 DIF ;!;!;!;!;!;!;!;!;!;!

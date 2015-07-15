@@ -166,7 +166,7 @@ public class FileWriterFilter extends Thread {
 		} // catch
 
 		// At this point, we have all lines of text in tmpArray.
-
+		alphabeticalFilter(tmpArray);
 		// Write the string array to output file
 		try {
 			for (i = 0; i < count; i++) {
@@ -195,6 +195,29 @@ public class FileWriterFilter extends Thread {
 	{
 		String[] stringTable = line.split(" ");
 		return stringTable[1]+" "+stringTable[5]+" "+stringTable[4] + " "+stringTable[0];
+	}
+	
+	private void alphabeticalFilter(String[] stringArray)
+	{
+		boolean done = false;
+		while(!done)
+		{
+			done = true;
+			String firstLine = stringArray[0];
+			for(int i = 1 ; i < stringArray.length ; ++i)
+			{
+				if(stringArray[i] != null && stringArray[i].split(" ")[1] != null)
+				{
+					if(stringArray[i].split(" ")[1].compareToIgnoreCase(firstLine.split(" ")[1]) < 0)
+					{
+						stringArray[0] = stringArray[i];
+						stringArray[i] = firstLine;
+						firstLine = stringArray[0];
+						done = false;
+					}
+				}
+			}
+		}
 	}
 
 } // class

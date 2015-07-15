@@ -163,10 +163,6 @@ public class MergeFilter extends Thread {
 
 				} // if (!Done2)
 				
-				if(write1 && write2)
-				{
-					alphabeticalFilter();
-				
 				
 				if (write1) {
 					
@@ -203,7 +199,6 @@ public class MergeFilter extends Thread {
 					lineOfText2 = "";
 
 				} // if (Write2)
-				}
 
 			} // while ( !Done1 || !Done2 )
 
@@ -222,19 +217,5 @@ public class MergeFilter extends Thread {
 
 	} // run
 	
-	private void alphabeticalFilter()
-	{
-		if(!lineOfText1.isEmpty() || !lineOfText2.isEmpty())
-		{
-			String[] order1 = lineOfText1.split(" ");
-			String[] order2 = lineOfText2.split(" ");
-			if(order1[5].compareToIgnoreCase(order2[5]) > 0)
-			{
-				String temp = this.lineOfText1;
-				this.lineOfText1 = this.lineOfText2;
-				this.lineOfText2 = temp;
-			}
-		}
-	}
 
 } // class

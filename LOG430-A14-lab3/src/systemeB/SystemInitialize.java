@@ -60,7 +60,7 @@ public class SystemInitialize
 			 * System.out.println("\njava SystemInitialize <fichier d'entree> <fichier de sortie>");
 			 */
 			argv = new String[2];
-			argv[0] = "datain.txt";
+			argv[0] = "datainB.txt";
 			argv[1] = "resultats.txt";
 		}
 
